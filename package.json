@@ -4,6 +4,7 @@
   "description": "Open Homepage ",
   "version": "0.0.1",
   "license": "MIT",
+  "publisher": "HagiwaraTakayuki",
   "engines": {
     "vscode": "^1.69.0"
   },
