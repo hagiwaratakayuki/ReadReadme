@@ -2,18 +2,20 @@
 
 # Read Readme
 
-Open document what you are selected library or built-in library for languages in default browser.
+Open document what you are selected library ( built-in or community ) for languages in default browser.
 
 ![How to use](https://github.com/hagiwaratakayuki/ReadReadme/HEAD/images/howtouse.gif "How to use")
 
 ## Accepted Language
 
--node.js(vue, svelte, react, typescript, reacttypscr)
+-node.js(vue, svelte, react, typescript, reacttypscript)
 -php
 -python
 -golang
 
+## Limitation
 
+Expect php, it works only "import line".
 
 
 
@@ -21,7 +23,7 @@ Open document what you are selected library or built-in library for languages in
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
+First Release
