@@ -15,7 +15,7 @@ Open document what you are selected library ( built-in or community ) for langua
 
 ## Limitation
 
-Expect php, it works only "import line".
+Expect php, it need import context(ex. require('foobar') and select foobar).
 
 
 

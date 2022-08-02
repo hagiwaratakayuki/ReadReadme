@@ -121,7 +121,7 @@ class Engine extends Base {
             }
             if (IS_GO_PATH === true) {
                 if (reguraisedText.indexOf('github.com')) {
-                    reguraisedText = /github.com\/[^/]+\/[^/]+\//.exec(reguraisedText)[0]   
+                    reguraisedText = /github.com\/[^/]+\/[^/]+\//.exec(reguraisedText)[0]; 
                 
                 }    
                 
