@@ -1,0 +1,8 @@
+{
+    "readreadme_title": "ホームページを開く",
+    "checking": "ホームページほ検索しています",
+    "app_code": "選択した%selectedText%は外部ライブラリではないようです",
+    "missing": "選択した%selectedText%のホームページが見つかりません ",
+    "down": "レポジトリーサーバーが停止中です"
+
+}
