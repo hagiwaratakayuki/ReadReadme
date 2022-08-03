@@ -15,8 +15,8 @@ Open document what you are selected library ( built-in or community ) for langua
 
 ## Limitation
 
-Expect php, it need import context(ex. require('foobar') and select foobar).
-
+- Expect php, it need import context(ex. require('foobar') and select foobar). 
+- Can not detect instans's class
 
 
 
