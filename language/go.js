@@ -94,7 +94,7 @@ class Engine extends Base {
                         if (isRequire) {
                             let cand = URL_REGX.exec(trimed);
                             if (cand.length > 0 && cand[0].includes('.') === true && cand[0].includes('/') === true) {
-                                let url = cand[0].split('/v[\d+.]/i')[0]
+                                let url = cand[0]
                                 LIBRARY_URLS.push(url)
                                 trimed = trimed.replace(url, '');
                             }
