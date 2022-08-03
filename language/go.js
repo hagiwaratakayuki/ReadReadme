@@ -74,7 +74,8 @@ class Engine extends Base {
                     let isRequire = false;
                     let isRequireModeIn = false
                     let isReplace = false;
-                    let isReplaceModeIn = false
+                    let isReplaceModeIn = false;
+                    let isUrlExist = false
 
                     for (let line of lines) {
                         isRequireModeIn = false
@@ -97,8 +98,12 @@ class Engine extends Base {
                                 let url = cand[0]
                                 LIBRARY_URLS.push(url)
                                 trimed = trimed.replace(url, '');
+                                isUrlExist = true;
                             }
-                            if (trimed.includes(')') === true ||  ( isRequireModeIn === true && trimed.includes('(') === false) ) {
+                            else {
+                                isUrlExist = false;
+                            }
+                            if (trimed.includes(')') === true ||  ( isUrlExist === true && isRequireModeIn === true && trimed.includes('(') === false) ) {
                                 isRequire = false;
                             }
 
@@ -121,8 +126,12 @@ class Engine extends Base {
                                 let baseVersion = left.split(/\s+/)[0].replace(/\\$/, '');
                                 let replace = right.trim().split(/\s+/)[0];
                                 REPLACE_MAP[baseVersion] = replace;
+                                isUrlExist = true
                             }
-                            if (trimed.includes(')') === true || (isReplaceModeIn === true && trimed.includes('(') === false)) {
+                            else {
+                                isUrlExist = false
+                            }
+                            if (trimed.includes(')') === true || (isUrlExist === true && isReplaceModeIn === true && trimed.includes('(') === false)) {
                                 isReplace = false;
                             }                         
                         }
