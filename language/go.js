@@ -6,11 +6,11 @@ const QUATE = /(["'])(.+)?\1/;
 const NOT_CLOSE_PT = /["'][^"'\s]+ | [^"'\s]+["']/;
 const CLOSER_PT = /["']/g;
 const ERRORS = require('../error_messages.js');
-const URL_REGX = /[\w!\?/\+\-_~=;\.,\*&@#\$%\(\)'\[\]]+/
+
 
 let UPDATE;
 let GO_MOD_PATH;
-let LIBRARY_URLS;
+
 let REPLACE_MAP;
 let IS_GO_PATH = false;
 
@@ -69,71 +69,25 @@ class Engine extends Base {
                 }
                 if (IS_GO_PATH === false) {
                     const lines =  new TextDecoder().decode(await vscode.workspace.fs.readFile(GO_MOD_PATH)).split(/\r|\r\n|\n/)
-                    LIBRARY_URLS = [];
+                   
                     REPLACE_MAP = {};
-                    let isRequire = false;
-                    let isRequireModeIn = false
-                    let isReplace = false;
-                    let isReplaceModeIn = false;
-                    let isUrlExist = false
+                    
 
                     for (let line of lines) {
-                        isRequireModeIn = false
-                        isReplaceModeIn = false;
-                        let splited = line.trim().split('//');
-                        if (splited.length > 1) {
-                            splited.pop();
-
-                        }
-                        let trimed = splited.join('//');
-                        if (trimed.indexOf('require') === 0) {
-                            isRequire = true;
-                            trimed = trimed.replace('require', '').trim()
-                            isRequireModeIn = true;
-                        }
-
-                        if (isRequire) {
-                            let cand = URL_REGX.exec(trimed);
-                            if (cand.length > 0 && cand[0].includes('.') === true && cand[0].includes('/') === true) {
-                                let url = cand[0]
-                                LIBRARY_URLS.push(url)
-                                trimed = trimed.replace(url, '');
-                                isUrlExist = true;
-                            }
-                            else {
-                                isUrlExist = false;
-                            }
-                            if (trimed.includes(')') === true ||  ( isUrlExist === true && isRequireModeIn === true && trimed.includes('(') === false) ) {
-                                isRequire = false;
-                            }
-
-                        }
-
+                        let trimed = line.trim()   
 
                         
                         
                         if (trimed.includes('replace') === 0) {
-                            isReplaceModeIn = isReplace = true;
-                            trimed = trimed.replace('replace', '');
                             
-
-                             
-                        }
-
-                        if (isReplace) {
-                            if (trimed.includes('=>')) {
-                                let { left, right } = trimed.replace('replace', '').trim().split(/\s*=>\s*/)
-                                let baseVersion = left.split(/\s+/)[0].replace(/\\$/, '');
-                                let replace = right.trim().split(/\s+/)[0];
-                                REPLACE_MAP[baseVersion] = replace;
-                                isUrlExist = true
-                            }
-                            else {
-                                isUrlExist = false
-                            }
-                            if (trimed.includes(')') === true || (isUrlExist === true && isReplaceModeIn === true && trimed.includes('(') === false)) {
-                                isReplace = false;
-                            }                         
+                            trimed = trimed.replace('replace', '');
+                                                  
+                            let { left, right } = trimed.replace('replace', '').trim().split(/\s*=>\s*/)
+                            let baseVersion = left.trim().split(/\s+/)[0].replace(/\\$/, '');
+                            let replace = right.trim().split(/\s+/)[0];
+                            REPLACE_MAP[baseVersion] = replace;
+                                
+                            
                         }
 
                         
@@ -142,7 +96,7 @@ class Engine extends Base {
                 
             }
             if (IS_GO_PATH === false) {
-                let isReplaced = false;
+                
                 for (let baseVersion of Object.keys(REPLACE_MAP)) {
                     let check = reguraisedText.replace(baseVersion, '');
                     if (!check || check.indexOf('/') === 0) {
@@ -151,30 +105,20 @@ class Engine extends Base {
                             return ERRORS.AppCode;
                         }
                         reguraisedText = replace;
-                        isReplaced = true
+                        
                         break;
                     }
                 }
-                if (isReplaced === false) {
-                    for (let libraly_url  of LIBRARY_URLS) {
-                        let check = reguraisedText.replace(libraly_url, '');
-                        if (!check || check.indexOf('/') === 0) {
-                            
-                            reguraisedText = libraly_url;
-                            
-                            break;
-                        }
-                    }
-                }
+               
 
             }
-            if (IS_GO_PATH === true) {
-                if (reguraisedText.indexOf('github.com')) {
-                    reguraisedText = /github.com\/[^/]+\/[^/]+\//.exec(reguraisedText)[0]; 
+            
+            if (reguraisedText.includes('github.com') || reguraisedText.includes('gitlab.com')) {
+                reguraisedText = /(github.com|gitlab.com)\/[^/]+\/[^/]+\//.exec(reguraisedText)[0]; 
                 
-                }    
+            }    
                 
-            }
+            
             
             reguraisedText = 'http://' + reguraisedText;
         }
