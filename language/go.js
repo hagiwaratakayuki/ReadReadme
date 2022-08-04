@@ -55,49 +55,52 @@ class Engine extends Base {
         else {
             
 
-            const stat = await vscode.workspace.fs.stat(GO_MOD_PATH);
-            let isUpdated = UPDATE == false || UPDATE < stat.mtime;
-            UPDATE = stat.mtime;
-            if (isUpdated === true) {
-                if (!GO_MOD_PATH) {
-                    GO_MOD_PATH = await this.searchGoMod();
-                }
+           
+            if (!UPDATE) {
+                
+                GO_MOD_PATH = await this.searchGoMod();
+                
             
                 if (GO_MOD_PATH !== false) {
                     IS_GO_PATH = false;
                     
                 }
-                if (IS_GO_PATH === false) {
-                    const lines =  new TextDecoder().decode(await vscode.workspace.fs.readFile(GO_MOD_PATH)).split(/\r|\r\n|\n/)
-                   
-                    REPLACE_MAP = {};
-                    
-
-                    for (let line of lines) {
-                        let trimed = line.trim()   
-
-                        
-                        
-                        if (trimed.includes('replace') === 0) {
-                            
-                            trimed = trimed.replace('replace', '');
-                                                  
-                            let { left, right } = trimed.replace('replace', '').trim().split(/\s*=>\s*/)
-                            let baseVersion = left.trim().split(/\s+/)[0].replace(/\\$/, '');
-                            let replace = right.trim().split(/\s+/)[0];
-                            REPLACE_MAP[baseVersion] = replace;
-                                
-                            
-                        }
-
-                        
-                    }
-                }
+                
                 
             }
             if (IS_GO_PATH === false) {
+                const stat = await vscode.workspace.fs.stat(GO_MOD_PATH);
+                let isUpdated = !UPDATE || UPDATE < stat.mtime;
+                UPDATE = stat.mtime;
+                if (isUpdated === true) {
+                    const lines = new TextDecoder().decode(await vscode.workspace.fs.readFile(GO_MOD_PATH)).split(/\r|\r\n|\n/)
+
+                    REPLACE_MAP = {};
+
+                    for (let line of lines) {
+                        let trimed = line.trim()
+
+
+
+                        if (trimed.includes('replace') === true) {
+
+                            trimed = trimed.replace('replace', '');
+                             
+                            let[left, right] = trimed.trim().split(/\s*=>\s*/)
+                            let baseVersion = left.trim().split(/\s+/)[0].replace(/\\$/, '');
+                            let replace = right.trim().split(/\s+/)[0];
+                            REPLACE_MAP[baseVersion] = replace;
+
+
+                        }
+
+
+                    }
+                }
                 
-                for (let baseVersion of Object.keys(REPLACE_MAP)) {
+           
+                
+                for (let baseVersion of Object.keys(REPLACE_MAP || {})) {
                     let check = reguraisedText.replace(baseVersion, '');
                     if (!check || check.indexOf('/') === 0) {
                         let replace = REPLACE_MAP[baseVersion];
@@ -114,7 +117,7 @@ class Engine extends Base {
             }
             
             if (reguraisedText.includes('github.com') || reguraisedText.includes('gitlab.com')) {
-                reguraisedText = /(github.com|gitlab.com)\/[^/]+\/[^/]+\//.exec(reguraisedText)[0]; 
+                reguraisedText = /(github.com|gitlab.com)\/[^/]+\/[^/]+/.exec(reguraisedText)[0]; 
                 
             }    
                 
@@ -139,18 +142,15 @@ class Engine extends Base {
         let searches = editor.document.uri.path.replace(workspaceFolder.path, '').replace(/^\//, '').split('/')
 
         searches.pop()
-        searches.unshift('.')
+        searches.unshift('')
         let cands = [];
-        let isFirst = false
+        
 
 
         for (const search of searches) {
             cands.push(search)
-            let dir = cands.join('/')
-            if (isFirst === true) {
-                dir += '/';
-                isFirst = false;
-            }
+            let dir = './' + cands.join('/')
+            
             let target = vscode.Uri.joinPath(workspaceFolder, dir)
 
             let results = await vscode.workspace.fs.readDirectory(target)

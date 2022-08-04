@@ -1,8 +1,8 @@
 {
   "name": "readreadme",
   "displayName": "ReadReadme",
-  "description": "Open Homepage ",
-  "version": "0.0.1",
+  "description": "Open homepage you are selected library",
+  "version": "0.0.3",
   "license": "MIT",
   "publisher": "HagiwaraTakayuki",
   "engines": {

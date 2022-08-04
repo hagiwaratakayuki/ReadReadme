@@ -23,7 +23,21 @@ Open document what you are selected library ( built-in or community ) for langua
 
 ## Release Notes
 
+### 0.0.3
 
-### 1.0.0
+[fix]
+
+- chegelog
+- readme.md
+
+
+### 0.0.2
+
+[fix]
+
+- go.mod replace check
+- readme.md
+
+### 0.0.1
 
 First Release
